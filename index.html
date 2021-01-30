@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Beach Hobo</title>
+</head>
+<body>
+<canvas id="main"
+        width="800px"
+        height="600px"
+        style="border:1px solid #000; margin-left:auto; margin-right:auto; display:block;">
+</canvas>
+</body>
+<script src="js/loop.js"></script>
+<script src="js/player.js"></script>
+<script>
+    //+++ CONST
+    const GAME_WIDTH = 800;
+    const GAME_HEIGHT = 600;
+
+    const STATE_ZERO = 0;
+    const STATE_PLAY = 1;
+    const STATE_GAME_OVER = 3;
+    const STATE_PAUSE = 4;
+
+    // this .. feels .. bad?
+    const FLAG_DRAW = 'flag_draw';
+    const FLAG_UPDATE = 'flag_update';
+    //--- CONST
+
+    //+++ GLOBAL
+    var c = document.getElementById('main'),
+        ctx = c.getContext('2d'),
+        toDraw = [],
+        toUpdate = [],
+
+        // @todo extract into own file?
+        cfg = {
+            [FLAG_DRAW] : true,
+            [FLAG_UPDATE] : true,
+
+            disableDraw : function () {
+                this[FLAG_DRAW] = false;
+                console.log('draw disabled, flag set to', this[FLAG_DRAW]);
+            },
+
+        }
+
+    //--- GLOBAL
+
+    /**
+     * set everything up before we start the game loop
+     */
+    function init() {
+        console.log('init');
+        document.addEventListener('keydown', keydown)
+
+        //+++ init other objects
+        player.init();
+        //--- init other objects
+
+        //+++ add object to draw pool
+        toDraw.push(player);
+        //--- add object to draw pool
+
+        //+++ add object to update pool
+        toUpdate.push(player);
+        //--- add object to update pool
+    }
+
+    function update(delta) {
+        if (cfg[FLAG_UPDATE] === false) {
+            return;
+        }
+
+        for (let obj of toUpdate) {
+            obj.update(delta);
+        }
+    }
+
+    function draw() {
+        if (cfg[FLAG_DRAW] === false) {
+            return;
+        }
+
+        ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        for (let obj of toDraw) {
+            obj.draw(ctx);
+        }
+    }
+
+    function keydown(e) {
+        switch (e.code) {
+            case 'Tab':
+                e.preventDefault();
+                break;
+            case 'Space':
+                e.preventDefault();
+                break;
+            case 'Enter':
+                e.preventDefault();
+                break;
+            case 'Backspace':
+                break;
+            default:
+                console.log(e.code);
+                break;
+        }
+    }
+
+    init();
+    MainLoop.setUpdate(update).setDraw(draw).start();
+</script>
+</html>
