@@ -1,5 +1,5 @@
 //+++ CONST PLAYER
-const PLAYER_ACCELERATION = 10;
+const PLAYER_ACCELERATION = 5;
 const PLAYER_DECELERATION = 1;
 
 const FACING = {
@@ -14,8 +14,8 @@ player = {
 
     x: 0,
     y: 0,
-    w: 10,
-    h: 10,
+    w: 16,
+    h: 16,
     v: 0, // current value
     facing : FACING.NORTH,
 

@@ -11,12 +11,15 @@
         style="border:1px solid #000; margin-left:auto; margin-right:auto; display:block;">
 </canvas>
 </body>
+<script src="js/index.js"></script>
 <script src="js/loop.js"></script>
 <script src="js/player.js"></script>
 <script>
     //+++ CONST
     const GAME_WIDTH = 800;
     const GAME_HEIGHT = 600;
+    const TILE_WIDTH = 16;
+    const TILE_HEIGHT = 16;
 
     const STATE_ZERO = 0;
     const STATE_PLAY = 1;
@@ -29,22 +32,23 @@
     //--- CONST
 
     //+++ GLOBAL
-    var c = document.getElementById('main'),
+    let c = document.getElementById('main'),
         ctx = c.getContext('2d'),
         toDraw = [],
         toUpdate = [],
+        sprite = new Image();
 
-        // @todo extract into own file?
-        cfg = {
-            [FLAG_DRAW] : true,
-            [FLAG_UPDATE] : true,
+    // @todo extract into own file?
+    cfg = {
+        [FLAG_DRAW]: true,
+        [FLAG_UPDATE]: true,
 
-            disableDraw : function () {
-                this[FLAG_DRAW] = false;
-                console.log('draw disabled, flag set to', this[FLAG_DRAW]);
-            },
+        disableDraw: function () {
+            this[FLAG_DRAW] = false;
+            console.log('draw disabled, flag set to', this[FLAG_DRAW]);
+        },
 
-        }
+    }
 
     //--- GLOBAL
 
@@ -60,12 +64,32 @@
         //--- init other objects
 
         //+++ add object to draw pool
-        toDraw.push(player);
+
         //--- add object to draw pool
 
         //+++ add object to update pool
         toUpdate.push(player);
         //--- add object to update pool
+
+        //+++ load images
+        sprite.src = 'img/beach_tileset.png';
+        //--- load images
+
+        //+++ generate beach
+        for (let y = 0; y < GAME_HEIGHT; y += TILE_HEIGHT) {
+            for (let x = 0; x < GAME_WIDTH; x += TILE_WIDTH) {
+                let sand = getRandomSand();
+                sand.x = x;
+                sand.y = y;
+                toDraw.push(sand);
+            }
+
+        }
+        //console.log(toDraw);
+        //--- generate beach
+
+        // @todo implement z-index
+        toDraw.push(player);
     }
 
     function update(delta) {
@@ -83,10 +107,14 @@
             return;
         }
 
+        // CLEAR
         ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
         for (let obj of toDraw) {
             obj.draw(ctx);
         }
+
+
     }
 
     function keydown(e) {
