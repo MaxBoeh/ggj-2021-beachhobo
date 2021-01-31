@@ -100,6 +100,9 @@ player = {
         }
         ctx.rect(x, y, TILE_WIDTH, TILE_HEIGHT);
         ctx.stroke();
+
+        this.selectX = x;
+        this.selectY = y;
     },
 
     nextFrame: function () {
@@ -215,6 +218,19 @@ player = {
         this.frameTick = 0;
     },
 
+    harvest : function () {
+        // get object within the selected action tile
+        let obj = getObjectByPos(this.selectX, this.selectY);
+        // remove object from draw because we harvested it
+        switch (obj.constructor.name) {
+            case 'Misc':
+                // remove misc
+                toDraw.splice(obj.index, 1);
+                break;
+        }
+
+    },
+
     /**
      * DO NOT USE "this" IN THIS METHOD
      * @param e
@@ -237,6 +253,9 @@ player = {
             case 'KeyD':
                 moving = true;
                 player.moveRight();
+                break;
+            case 'KeyF':
+                player.harvest();
                 break;
 
         }

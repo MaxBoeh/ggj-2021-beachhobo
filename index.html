@@ -205,13 +205,32 @@
             tileX = x - modX,
             tileY = y - modY;
 
-        // this .. not very performant 
+        let objects = getObjectByPos(tileX, tileY);
+        console.log(objects);
+
+    }
+
+    /**
+     * returns a single tile object by tile pos
+     * @todo THIS IS A HACK, FIX IT
+     * @param x
+     * @param y
+     * @returns {null}
+     */
+    function getObjectByPos(x, y) {
+        let found = null,
+            index = 0;
+        // this .. not very performant
         for(let obj of toDraw) {
-            if (obj.x === tileX && obj.y === tileY) {
-                console.log(obj);
+            // some tiles can share space (e.g. misc) so we want only the last one (HACK)
+            if (obj.x === x && obj.y === y) {
+                found = obj;
+                found.index = index;
             }
+            index+=1;
         }
 
+        return found;
     }
 
     init();
