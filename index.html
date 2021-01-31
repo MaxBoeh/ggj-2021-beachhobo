@@ -37,6 +37,7 @@
         toDraw = [],
         toUpdate = [],
         sprite = new Image();
+        watersprite = new Image();
 
     // @todo extract into own file?
     cfg = {
@@ -73,12 +74,16 @@
 
         //+++ load images
         sprite.src = 'img/beach_tileset.png';
+        watersprite.src = 'img/water_tileset.png';
         //--- load images
 
         //+++ generate beach
+        let tile_row = 0,
+            tile_col = 0;
+
         for (let y = 0; y < GAME_HEIGHT; y += TILE_HEIGHT) {
             for (let x = 0; x < GAME_WIDTH; x += TILE_WIDTH) {
-                let tile = getRandomSand();
+                let tile = getRandomTile(tile_col);
                 tile.x = x;
                 tile.y = y;
                 toDraw.push(tile);
@@ -89,8 +94,14 @@
                     misc.y = y;
                     toDraw.push(misc);
                 }
-            }
+                tile_col += 1;
+                //@todo implement support for tiles bigger than 16px
+                if(tile_col > 46) {
+                    break;
+                }
 
+            }
+            tile_col = 0;
         }
         //console.log(toDraw);
 
