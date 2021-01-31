@@ -1,6 +1,7 @@
 //+++ CONST PLAYER
-const PLAYER_ACCELERATION = 2;
-const PLAYER_DECELERATION = 1;
+const PLAYER_ACCELERATION = 1;
+const PLAYER_V_MAX = 1;
+const PLAYER_DECELERATION = 0.5;
 const PLAYER_START_X = 400;
 const PLAYER_START_Y = 300;
 
@@ -31,10 +32,12 @@ player = {
     animations: 3,
     frame: 0,
     frameTick: 0,
+    isMoving: false,
 
     init: function () {
         console.log('init player');
         document.addEventListener('keydown', this.keydown)
+        document.addEventListener('keyup', this.keyup)
     },
 
     draw: function (ctx) {
@@ -48,6 +51,16 @@ player = {
         if (cfg[FLAG_DRAW_TILE_BORDER_ON_PLAYER]) {
             this.drawTileBorder(ctx);
         }
+
+        /* DEBUG IS MOVING
+        if(this.isMoving) {
+            ctx.fillStyle = '#FFF';
+            ctx.fillRect(0,0,TILE_WIDTH, TILE_HEIGHT);
+        } else {
+            ctx.fillStyle = '#F00';
+            ctx.fillRect(0,0,TILE_WIDTH, TILE_HEIGHT);
+        }
+         */
     },
 
     drawTileBorder: function (ctx) {
@@ -101,6 +114,7 @@ player = {
     },
 
     update: function (delta) {
+        // move player as long as we have velocity
         if (this.v > 0) {
             switch (this.facing) {
                 case FACING.NORTH:
@@ -117,7 +131,11 @@ player = {
                     break;
             }
         }
-        this.decelerate();
+
+        // decelerate to zero when we stop moving
+        if (!this.isMoving) {
+            this.decelerate();
+        }
     },
 
     moveUp: function () {
@@ -171,6 +189,9 @@ player = {
 
     accelerate: function () {
         this.v += PLAYER_ACCELERATION;
+        if (this.v > PLAYER_V_MAX) {
+            this.v = PLAYER_V_MAX;
+        }
         //console.log(this.v);
     },
 
@@ -194,21 +215,58 @@ player = {
         this.frameTick = 0;
     },
 
+    /**
+     * DO NOT USE "this" IN THIS METHOD
+     * @param e
+     */
     keydown: function (e) {
+        let moving = player.isMoving;
         switch (e.code) {
             case 'KeyW':
+                moving = true;
                 player.moveUp();
                 break;
             case 'KeyA':
+                moving = true;
                 player.moveLeft();
                 break;
             case 'KeyS':
+                moving = true;
                 player.moveDown();
                 break;
             case 'KeyD':
+                moving = true;
                 player.moveRight();
                 break;
+
         }
+        player.isMoving = moving;
+
+        //console.log(player.x, player.y);
+    },
+
+    /**
+     * DO NOT USE "this" IN THIS METHOD
+     * @param e
+     */
+    keyup: function (e) {
+        let moving = true;
+        switch (e.code) {
+            case 'KeyW':
+                moving = false;
+                break;
+            case 'KeyA':
+                moving = false;
+                break;
+            case 'KeyS':
+                moving = false;
+                break;
+            case 'KeyD':
+                moving = false;
+                break;
+
+        }
+        player.isMoving = moving;
 
         //console.log(player.x, player.y);
     },

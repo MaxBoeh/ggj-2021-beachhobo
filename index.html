@@ -49,6 +49,8 @@
         watersprite = new Image(),
         playersprite = new Image();
 
+    // set default fillStyle for better debugging;
+    ctx.fillStyle = '#F0F';
     // @todo extract into own file?
     cfg = {
         [FLAG_DRAW]: true,
@@ -176,8 +178,7 @@
                 break;
             case 'Space':
                 e.preventDefault();
-                console.log(player.x, player.y);
-                console.log(player.x % 16, player.y % 16);
+                console.log('isPlayerMoving?' , player.isMoving);
                 break;
             case 'Enter':
                 e.preventDefault();
