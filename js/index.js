@@ -132,6 +132,10 @@ function getRandomSand() {
 
 //--- SAND
 //+++ WATER
+const WATER_ANIMATION_INTERVAL = 1000;
+const WATER_ANIMATION_MODULO = 10;
+const WATER_COL = 47;
+
 function Water(x, y) {
     this.x = x;
     this.y = y;
@@ -140,21 +144,71 @@ function Water(x, y) {
     this.spriteX = 16; // default water
     this.spriteY = 16; // default water
     this.withMisc = false;
+    this.animations = 5;
+    this.step = -1;
+    this.originalSpriteX = 0;
+    this.originalSpriteY = 0;
+    this.drawTick = 0;
+    //@todo neither of those is working and i dont know why
+    /*
+    this.animationIntervalId = setInterval(this.nextFrame, WATER_ANIMATION_INTERVAL);
+    this.animationIntervalId = setInterval(
+        (function (self) {
+                return function () {
+                    self.nextFrame
+                }
+            })(this),
+                WATER_ANIMATION_INTERVAL
+        );
+    */
 
     this.draw = function (ctx) {
+        if (this.step === -1) {
+            this.originalSpriteX = this.spriteX;
+            this.step = 0;
+        }
         ctx.drawImage(watersprite, this.spriteX, this.spriteY, this.w, this.h, this.x, this.y, this.w, this.h);
+        this.drawTick += 1;
+        if (this.drawTick % WATER_ANIMATION_MODULO === 0) {
+            this.nextFrame();
+        }
+
+
+    }
+
+    this.nextFrame = function () {
+        console.log('next frame');
+        this.step += 1;
+        this.drawTick = 0;
+        this.spriteX += this.w;
+        if (this.step > this.animations) {
+            this.step = 0;
+            this.spriteX = this.originalSpriteX;
+        }
     }
 }
 
 const WATER_SPRITES = {
     TYPE_A: {x: 0, y: 0},
     TYPE_B: {x: 0, y: 16},
+    TYPE_C: {x: 0, y: 32},
+    TYPE_D: {x: 0, y: 48},
+    TYPE_E: {x: 0, y: 64},
+    TYPE_F: {x: 0, y: 80},
+    TYPE_G: {x: 0, y: 96},
+    TYPE_H: {x: 0, y: 112},
 }
 
 function getRandomWater() {
     let types = [
             'TYPE_A',
-            'TYPE_B'
+            'TYPE_B',
+            'TYPE_C',
+            'TYPE_D',
+            'TYPE_E',
+            'TYPE_F',
+            'TYPE_G',
+            'TYPE_H',
         ],
         water = new Water();
     let randomIndex = Math.floor(Math.random() * types.length);
@@ -165,8 +219,20 @@ function getRandomWater() {
 
 //--- WATER
 function getRandomTile(col) {
-    if(col >= 46) {
-        return getRandomWater();
+    if (col >= WATER_COL) {
+        let water = getRandomWater();
+        /*
+        setInterval(
+            (function (self) {
+                return function () {
+                    self.nextFrame
+                }
+            })(water),
+            WATER_ANIMATION_INTERVAL
+        );
+        */
+
+        return water;
     } else {
         return getRandomSand();
     }
