@@ -1,6 +1,8 @@
 //+++ CONST PLAYER
 const PLAYER_ACCELERATION = 1;
 const PLAYER_DECELERATION = 0.5;
+const PLAYER_START_X = 400;
+const PLAYER_START_Y = 300;
 
 const FACING = {
     NORTH: 'N',
@@ -18,9 +20,8 @@ const PLAYER_SPRITE = {
 //--- CONST PLAYER
 
 player = {
-
-    x: 0,
-    y: 0,
+    x: PLAYER_START_X,
+    y: PLAYER_START_Y,
     w: 16,
     h: 16,
     v: 0, // current value

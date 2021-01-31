@@ -31,21 +31,28 @@
     // this .. feels .. bad?
     const FLAG_DRAW = 'flag_draw';
     const FLAG_UPDATE = 'flag_update';
+    const FLAG_DRAW_TILE_BORDER_ON_MOUSE = 'flag_draw_tile_border_on_mouse';
     //--- CONST
 
     //+++ GLOBAL
     let c = document.getElementById('main'),
         ctx = c.getContext('2d'),
+        // pools
         toDraw = [],
         toUpdate = [],
-        sprite = new Image();
-        watersprite = new Image();
+        // mouse pos
+        mX = 0,
+        mY = 0,
+        // images
+        sprite = new Image(),
+        watersprite = new Image(),
         playersprite = new Image();
 
     // @todo extract into own file?
     cfg = {
         [FLAG_DRAW]: true,
         [FLAG_UPDATE]: true,
+        [FLAG_DRAW_TILE_BORDER_ON_MOUSE] : true,
 
         disableDraw: function () {
             this[FLAG_DRAW] = false;
@@ -61,7 +68,8 @@
      */
     function init() {
         console.log('init');
-        document.addEventListener('keydown', keydown)
+        document.addEventListener('keydown', keydown);
+        c.addEventListener('mousemove', mouse);
 
         //+++ init other objects
         player.init();
@@ -125,7 +133,7 @@
         }
     }
 
-    function draw() {
+    function draw(lag) {
         if (cfg[FLAG_DRAW] === false) {
             return;
         }
@@ -134,10 +142,29 @@
         ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 
         for (let obj of toDraw) {
-            obj.draw(ctx);
+            obj.draw(ctx, lag);
         }
 
+        if(cfg[FLAG_DRAW_TILE_BORDER_ON_MOUSE]) {
+            drawTileBorder(ctx);
+        }
 
+    }
+
+    function drawTileBorder(ctx) {
+        //console.log('draw tile', mX, mY);
+        ctx.strokeStyle = '#F00';
+        ctx.beginPath();
+        let modX = mX % TILE_WIDTH,
+            modY = mY % TILE_HEIGHT,
+            x = mX,
+            y = mY;
+
+        x -= modX;
+        y -= modY;
+
+        ctx.rect(x, y, TILE_WIDTH, TILE_HEIGHT);
+        ctx.stroke();
     }
 
     function keydown(e) {
@@ -157,6 +184,11 @@
                 //console.log(e.code);
                 break;
         }
+    }
+
+    function mouse(e) {
+        mX = e.offsetX;
+        mY = e.offsetY;
     }
 
     init();

@@ -215,8 +215,9 @@ function getRandomWater() {
     water.spriteY = WATER_SPRITES[types[randomIndex]].y;
     return water;
 }
-
 //--- WATER
+
+
 function getRandomTile(col) {
     if (col >= WATER_COL) {
         let water = getRandomWater();
