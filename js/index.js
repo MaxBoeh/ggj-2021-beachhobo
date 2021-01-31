@@ -6,29 +6,59 @@ function Palm(x, y) {
     this.spriteX = 0;
     this.spriteY = 0;
 }
-
-function Star(x, y) {
+//+++ MISC
+function Misc(x, y) {
     this.x = x;
     this.y = y;
-    this.h = 12;
-    this.w = 13;
-    this.spriteX = 163;
-    this.spriteY = 243;
+    this.h = 16;
+    this.w = 16;
+    this.spriteX = 160;
+    this.spriteY = 240;
+
+    this.draw = function(ctx) {
+        ctx.drawImage(sprite, this.spriteX, this.spriteY, this.w, this.h, this.x, this.y, this.w, this.h);
+    }
+}
+const MISC_SPRITES = {
+    TYPE_A : {x:160, y:240},
+    TYPE_B : {x:176, y:240},
+    TYPE_C : {x:192, y:240},
+    TYPE_D : {x:208, y:240},
+    TYPE_E : {x:224, y:240},
+
 }
 
+function getRandomMisc() {
+    let types = [
+        'TYPE_A',
+        'TYPE_B',
+        'TYPE_C',
+        'TYPE_D',
+        'TYPE_E',
+    ];
+    let misc = new Misc();
+    let randomIndex = Math.floor(Math.random() * types.length);
+    misc.spriteX = MISC_SPRITES[types[randomIndex]].x;
+    misc.spriteY = MISC_SPRITES[types[randomIndex]].y;
+    return misc;
+}
+//--- MISC
+
+//+++ SAND
 function Sand(x, y) {
     this.x = x;
     this.y = y;
     this.h = TILE_HEIGHT;
     this.w = TILE_WIDTH;
-    this.spriteX = 224;
-    this.spriteY = 144;
+    this.spriteX = 224; // default sand
+    this.spriteY = 144; // default sand
+    this.withMisc = false;
 
     this.draw = function (ctx) {
         ctx.drawImage(sprite, this.spriteX, this.spriteY, this.w, this.h, this.x, this.y, this.w, this.h);
     }
 }
-//+++ SAND
+// @todo remove TYPE_A? (because its already drawn as default?)
 const SAND_SPRITES = {
     TYPE_A : {x:224, y:144},
     TYPE_B : {x:208, y:144},
@@ -48,7 +78,9 @@ const SAND_SPRITES = {
     TYPE_P : {x:112, y:176},
     TYPE_Q : {x:128, y:176},
     TYPE_R : {x:144, y:176},
-
+    TYPE_S : {x:240, y:240},
+    TYPE_T : {x:256, y:240},
+    TYPE_U : {x:272, y:240},
 }
 function getRandomSand() {
     let types = [
@@ -70,12 +102,20 @@ function getRandomSand() {
         'TYPE_P',
         'TYPE_Q',
         'TYPE_R',
+        'TYPE_S',
+        'TYPE_T',
+        'TYPE_U',
     ]
     let sand = new Sand();
 
-    // make default sand twice as common as every other type
-    let normal = Math.floor(Math.random() * 2);
-    if (normal === 1) {
+    // make default sand more as common as every other type
+    let normal = Math.floor(Math.random() * 3);
+    if (normal !== 1) {
+        // 1 in x chance to spawn with misc
+        if(Math.floor(Math.random() * 100) === 1) {
+            console.log('with misc')
+            sand.withMisc = true;
+        }
         return sand;
     }
 

@@ -78,14 +78,22 @@
         //+++ generate beach
         for (let y = 0; y < GAME_HEIGHT; y += TILE_HEIGHT) {
             for (let x = 0; x < GAME_WIDTH; x += TILE_WIDTH) {
-                let sand = getRandomSand();
-                sand.x = x;
-                sand.y = y;
-                toDraw.push(sand);
+                let tile = getRandomSand();
+                tile.x = x;
+                tile.y = y;
+                toDraw.push(tile);
+                // check for misc spawn
+                if (tile.withMisc) {
+                    let misc = getRandomMisc();
+                    misc.x = x;
+                    misc.y = y;
+                    toDraw.push(misc);
+                }
             }
 
         }
         //console.log(toDraw);
+
         //--- generate beach
 
         // @todo implement z-index
