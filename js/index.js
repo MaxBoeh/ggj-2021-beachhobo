@@ -134,7 +134,6 @@ function getRandomSand() {
 //+++ WATER
 const WATER_ANIMATION_INTERVAL = 1000;
 const WATER_ANIMATION_MODULO = 10;
-const WATER_COL = 47;
 
 function Water(x, y) {
     this.x = x;
