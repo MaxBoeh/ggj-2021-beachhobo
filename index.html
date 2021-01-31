@@ -32,6 +32,7 @@
     const FLAG_DRAW = 'flag_draw';
     const FLAG_UPDATE = 'flag_update';
     const FLAG_DRAW_TILE_BORDER_ON_MOUSE = 'flag_draw_tile_border_on_mouse';
+    const FLAG_DRAW_TILE_BORDER_ON_PLAYER = 'flag_draw_tile_border_on_player';
     //--- CONST
 
     //+++ GLOBAL
@@ -53,6 +54,7 @@
         [FLAG_DRAW]: true,
         [FLAG_UPDATE]: true,
         [FLAG_DRAW_TILE_BORDER_ON_MOUSE] : true,
+        [FLAG_DRAW_TILE_BORDER_ON_PLAYER] : true,
 
         disableDraw: function () {
             this[FLAG_DRAW] = false;
@@ -174,6 +176,8 @@
                 break;
             case 'Space':
                 e.preventDefault();
+                console.log(player.x, player.y);
+                console.log(player.x % 16, player.y % 16);
                 break;
             case 'Enter':
                 e.preventDefault();

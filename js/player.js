@@ -1,6 +1,6 @@
 //+++ CONST PLAYER
-const PLAYER_ACCELERATION = 1;
-const PLAYER_DECELERATION = 0.5;
+const PLAYER_ACCELERATION = 2;
+const PLAYER_DECELERATION = 1;
 const PLAYER_START_X = 400;
 const PLAYER_START_Y = 300;
 
@@ -12,10 +12,10 @@ const FACING = {
 };
 
 const PLAYER_SPRITE = {
-    [FACING.SOUTH] : {x:0,y:0},
-    [FACING.WEST] : {x:0, y:16},
-    [FACING.NORTH] : {x:0, y:32},
-    [FACING.EAST] : {x:0, y:48},
+    [FACING.SOUTH]: {x: 0, y: 0},
+    [FACING.WEST]: {x: 0, y: 16},
+    [FACING.NORTH]: {x: 0, y: 32},
+    [FACING.EAST]: {x: 0, y: 48},
 }
 //--- CONST PLAYER
 
@@ -25,12 +25,12 @@ player = {
     w: 16,
     h: 16,
     v: 0, // current value
-    facing : FACING.NORTH,
-    spriteX : 0,
-    spriteY : 0,
+    facing: FACING.NORTH,
+    spriteX: 0,
+    spriteY: 0,
     animations: 3,
-    frame:0,
-    frameTick:0,
+    frame: 0,
+    frameTick: 0,
 
     init: function () {
         console.log('init player');
@@ -44,9 +44,52 @@ player = {
         if (this.frameTick % 5 === 0 && this.v > 0) {
             this.nextFrame();
         }
+
+        if (cfg[FLAG_DRAW_TILE_BORDER_ON_PLAYER]) {
+            this.drawTileBorder(ctx);
+        }
     },
 
-    nextFrame : function () {
+    drawTileBorder: function (ctx) {
+        ctx.strokeStyle = '#FFF';
+        ctx.beginPath();
+        let modX = this.x % TILE_WIDTH,
+            modY = this.y % TILE_HEIGHT,
+            x = this.x,
+            y = this.y;
+
+        if (modY > 8) {
+            y += (TILE_HEIGHT - modY);
+        } else {
+            y -= modY;
+        }
+
+        if (modX > 8) {
+            x += TILE_WIDTH - modX;
+        } else {
+            x -= modX;
+        }
+
+        // position tile according to the direction the player is facing
+        switch (this.facing) {
+            case FACING.NORTH:
+                y -= this.h;
+                break;
+            case FACING.EAST:
+                x += this.w;
+                break;
+            case FACING.WEST:
+                x -= this.w;
+                break;
+            case FACING.SOUTH:
+                y += this.h;
+                break;
+        }
+        ctx.rect(x, y, TILE_WIDTH, TILE_HEIGHT);
+        ctx.stroke();
+    },
+
+    nextFrame: function () {
         console.log('next frame player');
         this.frameTick = 0;
         this.frame += 1;
@@ -144,7 +187,7 @@ player = {
 
     },
 
-    halt : function () {
+    halt: function () {
         console.log('halt stop');
         this.v = 0;
         this.frame = 0;
