@@ -40,6 +40,7 @@
         toUpdate = [],
         sprite = new Image();
         watersprite = new Image();
+        playersprite = new Image();
 
     // @todo extract into own file?
     cfg = {
@@ -77,6 +78,7 @@
         //+++ load images
         sprite.src = 'img/beach_tileset.png';
         watersprite.src = 'img/water_tileset.png';
+        playersprite.src = 'img/basev2.png';
         //--- load images
 
         //+++ generate beach
@@ -152,7 +154,7 @@
             case 'Backspace':
                 break;
             default:
-                console.log(e.code);
+                //console.log(e.code);
                 break;
         }
     }

@@ -176,7 +176,7 @@ function Water(x, y) {
     }
 
     this.nextFrame = function () {
-        console.log('next frame');
+        //console.log('next frame water');
         this.step += 1;
         this.drawTick = 0;
         this.spriteX += this.w;
