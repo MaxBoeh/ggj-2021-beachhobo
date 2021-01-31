@@ -74,6 +74,7 @@
         console.log('init');
         document.addEventListener('keydown', keydown);
         c.addEventListener('mousemove', mouse);
+        c.addEventListener('mousedown', mouseclick);
 
         //+++ init other objects
         player.init();
@@ -194,6 +195,23 @@
     function mouse(e) {
         mX = e.offsetX;
         mY = e.offsetY;
+    }
+
+    function mouseclick(e) {
+        let x = mX,
+            y = mY,
+            modX = x % TILE_WIDTH,
+            modY = y % TILE_HEIGHT,
+            tileX = x - modX,
+            tileY = y - modY;
+
+        // this .. not very performant 
+        for(let obj of toDraw) {
+            if (obj.x === tileX && obj.y === tileY) {
+                console.log(obj);
+            }
+        }
+
     }
 
     init();
